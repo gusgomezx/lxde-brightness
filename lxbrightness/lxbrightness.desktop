@@ -1,0 +1,9 @@
+[Desktop Entry]
+Version=1.0
+Type=Application
+Name=Ajustar Brillo
+Comment=Script para ajustar el brillo de la pantalla
+Exec=/home/gus/Applications/lxbrightness.sh
+Icon=display-brightness
+Terminal=false
+Categories=Utility;Settings;
