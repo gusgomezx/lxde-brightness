@@ -3,11 +3,11 @@
 desktop_file="lxbrightness.desktop"
 script_file="lxbrightness.sh"
 
-desktop_dest="$HOME/.local/share/applications/$desktop_file"
+desktop_dest="/usr/share/applications/$desktop_file"
 script_dest="/opt/lxbrightness.sh"
 
 if [ -f "$desktop_file" ]; then
-    cp "$desktop_file" "$desktop_dest"
+    sudo cp "$desktop_file" "$desktop_dest"
     echo " $desktop_file a $desktop_dest"
 else
     echo "$desktop_file not found."
