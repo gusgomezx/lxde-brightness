@@ -1,6 +1,6 @@
 #!/bin/bash
 
-config_file="$HOME/.ajustar_brillo_config"
+config_file="$HOME/.brightness_config"
 
 select_language() {
     lang=$(zenity --list --title="Select Language" --column="Language" "English" "Español")
