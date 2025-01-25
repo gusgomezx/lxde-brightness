@@ -5,4 +5,4 @@ Requieres
 - Zenity
 - xapp
 - xrandr
-
+- bc
