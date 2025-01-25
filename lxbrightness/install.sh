@@ -7,21 +7,21 @@ desktop_dest="$HOME/.local/share/applications/$desktop_file"
 script_dest="/opt/lxbrightness.sh"
 
 if [ -f "$desktop_file" ]; then
-    mv "$desktop_file" "$desktop_dest"
-    echo "Movido $desktop_file a $desktop_dest"
+    cp "$desktop_file" "$desktop_dest"
+    echo " $desktop_file a $desktop_dest"
 else
-    echo "$desktop_file no encontrado."
+    echo "$desktop_file not found."
 fi
 
 if [ -f "$script_file" ]; then
-    sudo mv "$script_file" "$script_dest"
-    echo "Movido $script_file a $script_dest"
+    sudo cp "$script_file" "$script_dest"
+    echo "Copy $script_file to $script_dest"
 else
-    echo "$script_file no encontrado."
+    echo "$script_file not found."
 fi
 
 if [ -f "$script_dest" ]; then
     sudo chmod +x "$script_dest"
 else
-    echo "Error."
+    echo "error permissions, file not found."
 fi
