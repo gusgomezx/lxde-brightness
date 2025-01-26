@@ -1,6 +1,7 @@
 #!/bin/bash
 
 config_file="$HOME/.brightness_config"
+brightness_file="$HOME/.current_brightness"
 
 select_language() {
     lang=$(zenity --list --title="Select Language" --column="Language" "English" "Español")
@@ -21,33 +22,44 @@ fi
 
 if [ "$language" == "en" ]; then
     title="Adjust Brightness"
-    prompt="Enter a brightness value (0.2 - 1.0):"
-    error_range="Please enter a value between 0.2 and 1.0."
-    error_valid="Please enter a valid value between 0.2 and 1.0."
+    prompt="Select a brightness value"
+    error_range="Please enter a value between 20 and 100."
+    error_valid="Please enter a valid integer between 20 and 100."
 else
     title="Ajustar Brillo"
-    prompt="Ingrese un valor de brillo (0.2 - 1.0):"
-    error_range="Por favor, ingrese un valor entre 0.2 y 1.0."
-    error_valid="Por favor, ingrese un valor válido entre 0.2 y 1.0."
+    prompt="Seleccione un valor de brillo"
+    error_range="Por favor, ingrese un valor entre 20 y 100."
+    error_valid="Por favor, ingrese un valor válido entre 20 y 100."
 fi
 
 output=$(xrandr --query | grep " connected" | awk '{ print $1 }')
 
 set_brightness() {
-    xrandr --output "$output" --brightness "$1"
+    # Convertir el valor de brillo de porcentaje a decimal
+    brightness_decimal=$(echo "scale=2; $1 / 100" | bc)
+    xrandr --output "$output" --brightness "$brightness_decimal"
 }
 
+# Cargar el brillo actual desde el archivo, si existe
+if [ -f "$brightness_file" ]; then
+    brightness=$(cat "$brightness_file")
+else
+    brightness=100  # Valor por defecto si no existe el archivo
+fi
+
 while true; do
-    brightness=$(zenity --entry --title="$title" --text="$prompt")
+    # Usar zenity --scale para seleccionar el brillo como un número entero
+    brightness=$(zenity --scale --title="$title" --text="$prompt" --min-value=20 --max-value=100 --value="$brightness" --step=1)
 
     if [ $? -ne 0 ]; then
         break
     fi
 
     # Validar el valor ingresado
-    if [[ "$brightness" =~ ^[0-1](\.[0-9]+)?$ ]]; then
-        if (( $(echo "$brightness >= 0.2" | bc -l) && $(echo "$brightness <= 1.0" | bc -l) )); then
+    if [[ "$brightness" =~ ^[0-9]+$ ]]; then
+        if (( brightness >= 20 && brightness <= 100 )); then
             set_brightness "$brightness"
+            echo "$brightness" > "$brightness_file"  # Guardar el brillo actual
         else
             zenity --error --text="$error_range"
         fi
