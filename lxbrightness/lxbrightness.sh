@@ -25,19 +25,29 @@ if [ "$language" == "en" ]; then
     prompt="Select a brightness value"
     error_range="Please enter a value between 20 and 100."
     error_valid="Please enter a valid integer between 20 and 100."
+    select_screen="Select Screen"
 else
     title="Ajustar Brillo"
     prompt="Seleccione un valor de brillo"
     error_range="Por favor, ingrese un valor entre 20 y 100."
     error_valid="Por favor, ingrese un valor válido entre 20 y 100."
+    select_screen="Seleccionar Pantalla"
 fi
 
-output=$(xrandr --query | grep " connected" | awk '{ print $1 }')
+# Obtener las salidas de pantalla conectadas
+outputs=$(xrandr --query | grep " connected" | awk '{ print $1 }')
+
+# Seleccionar la pantalla
+selected_output=$(zenity --list --title="$select_screen" --column="Screens" $outputs)
+
+if [ -z "$selected_output" ]; then
+    exit 1  # Salir si no se selecciona ninguna pantalla
+fi
 
 set_brightness() {
     # Convertir el valor de brillo de porcentaje a decimal
     brightness_decimal=$(echo "scale=2; $1 / 100" | bc)
-    xrandr --output "$output" --brightness "$brightness_decimal"
+    xrandr --output "$selected_output" --brightness "$brightness_decimal"
 }
 
 # Cargar el brillo actual desde el archivo, si existe
