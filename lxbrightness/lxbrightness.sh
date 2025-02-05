@@ -26,12 +26,14 @@ if [ "$language" == "en" ]; then
     error_range="Please enter a value between 20 and 100."
     error_valid="Please enter a valid integer between 20 and 100."
     select_screen="Select Screen"
+    exit_button="Exit"
 else
     title="Ajustar Brillo"
     prompt="Seleccione un valor de brillo"
     error_range="Por favor, ingrese un valor entre 20 y 100."
     error_valid="Por favor, ingrese un valor válido entre 20 y 100."
     select_screen="Seleccionar Pantalla"
+    exit_button="Salir"
 fi
 
 # Obtener las salidas de pantalla conectadas
@@ -59,8 +61,9 @@ fi
 
 while true; do
     # Usar zenity --scale para seleccionar el brillo como un número entero
-    brightness=$(zenity --scale --title="$title" --text="$prompt" --min-value=20 --max-value=100 --value="$brightness" --step=1)
+    brightness=$(zenity --scale --title="$title" --text="$prompt" --min-value=20 --max-value=100 --value="$brightness" --step=1 --extra-button="$exit_button")
 
+    # Comprobar si se presionó el botón de salir
     if [ $? -ne 0 ]; then
         break
     fi
